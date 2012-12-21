@@ -54,6 +54,7 @@ command[check_ip_conntrack]=/usr/lib64/nagios/plugins/check_ip_conntrack.pl -w 8
 /usr/lib64/nagios/plugins/check_nrpe -H [node IP address] -c check_ip_conntrack
 </code></pre>
 If NG, you can check the node's /var/log/secure and do over again node's visudo.
+
 ###6. add service on your nagios config
 <pre><code>
 define service{
