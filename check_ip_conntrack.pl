@@ -21,6 +21,11 @@ $verb_err     = 0;
 
 my $nf_conntrack_file = '/proc/net/nf_conntrack';
 my $ip_conntrack_file = '/proc/net/ip_conntrack';
+if (!-f $nf_conntrack_file and !-f $ip_conntrack_file) {
+    print "no conntrack_file found\n";
+    exit;
+}
+
 my @conntrack_max_files = qw(
         /proc/sys/net/nf_conntrack_max
         /proc/sys/net/netfilter/nf_conntrack_max
@@ -36,6 +41,10 @@ foreach (@conntrack_max_files) {
     }
 }
 
+if (!$max) {
+    print "ip_conntrack_max is NG\n";
+    exit;
+}
 
 my $command;
 if ( -f $nf_conntrack_file ) {

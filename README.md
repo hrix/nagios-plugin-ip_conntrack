@@ -15,7 +15,7 @@ options:
 <pre><code>
  cd /usr/lib64/nagios/plugins/
  wget https://raw.github.com/S1100/nagios-plugin-ip_conntrack/master/check_ip_conntrack.pl
- chmod 755 check_ip_conntrack_max.pl
+ chmod 755 check_ip_conntrack.pl
 </code></pre>
 ###2. check the response
 <pre><code>
@@ -34,7 +34,7 @@ $ ps aux|grep nrpe|grep -v grep
 nagios   27083  0.0  0.0   5096   724 ?        Ss   Dec20   0:05 /usr/sbin/nrpe -c /etc/nagios/nrpe.cfg -d
 
 # visudo
---- edit permission
+--- add permission to the user
 # for check_ip_conntrack
  %nagios       ALL=NOPASSWD:/usr/bin/wc
 
@@ -43,7 +43,9 @@ nagios   27083  0.0  0.0   5096   724 ?        Ss   Dec20   0:05 /usr/sbin/nrpe 
 </code></pre>
 ###4. add check_ip_conntrack command on your nrpe.cfg
 <pre><code>
-# command[check_ip_conntrack]=/usr/lib64/nagios/plugins/check_ip_conntrack.pl -w 80 -c 90
+# vi /etc/nagios/nrpe.cfg
+--add a line like this
+command[check_ip_conntrack]=/usr/lib64/nagios/plugins/check_ip_conntrack.pl -w 80 -c 90
 # service nrpe restart
 </code></pre>
 ###5. check from server
