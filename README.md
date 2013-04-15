@@ -28,34 +28,21 @@ sys     0m0.030s
 </code></pre>
 If your server needs over 5 second, should not to use this plugin.
 
-###3. allow nrpe user to count ip_conntrack
-<pre><code>
-$ ps aux|grep nrpe|grep -v grep
-nagios   27083  0.0  0.0   5096   724 ?        Ss   Dec20   0:05 /usr/sbin/nrpe -c /etc/nagios/nrpe.cfg -d
-
-# visudo
---- add permission to the user
-# for check_ip_conntrack
- %nagios       ALL=NOPASSWD:/usr/bin/wc
-
-# comment out this line
-#Defaults    requiretty
-</code></pre>
-###4. add check_ip_conntrack command on your nrpe.cfg
+###3. add check_ip_conntrack command on your nrpe.cfg
 <pre><code>
 # vi /etc/nagios/nrpe.cfg
 --add a line like this
 command[check_ip_conntrack]=/usr/lib64/nagios/plugins/check_ip_conntrack.pl -w 80 -c 90
 # service nrpe restart
 </code></pre>
-###5. check from server
+###4. check from server
 * FROM Nagios server
 <pre><code>
 /usr/lib64/nagios/plugins/check_nrpe -H [node IP address] -c check_ip_conntrack
 </code></pre>
 If NG, you can check the node's /var/log/secure and do over again node's visudo.
 
-###6. add service on your nagios config
+###5. add service on your nagios config
 <pre><code>
 define service{
   use                     huge
