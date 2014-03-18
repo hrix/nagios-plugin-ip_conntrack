@@ -6,6 +6,8 @@ use Getopt::Std;
 use vars qw($opt_c $opt_w
             $count_ip_conntrack $max_ip_conntrack
             $crit_level $warn_level
+            $crit_level_abs $warn_level_abs
+            $perf_data
             %exit_codes @memlist
             $percent $fmt_pct 
             $verb_err $command_line);
@@ -78,22 +80,26 @@ if (!$opt_w or $opt_w == 0 or !$opt_c or $opt_c == 0)
 $warn_level   = $opt_w;
 $crit_level   = $opt_c;
 
+$warn_level_abs = int( ($warn_level/100) * $max_ip_conntrack );
+$crit_level_abs = int( ($crit_level/100) * $max_ip_conntrack );
+$perf_data = "|ip_conntrack[count]=$count_ip_conntrack;$warn_level_abs;$crit_level_abs;0;$max_ip_conntrack";
+
 $percent    = $count_ip_conntrack / $max_ip_conntrack * 100;
 $fmt_pct    = sprintf "%.1f", $percent;
 if ($percent >= $crit_level)
 {
-print "ip_conntrack CRITICAL - $fmt_pct% ($count_ip_conntrack) used\n";
-exit $exit_codes{'CRITICAL'};
+	print "ip_conntrack CRITICAL - $fmt_pct% ($count_ip_conntrack) used $perf_data\n";
+	exit $exit_codes{'CRITICAL'};
 }
 elsif ($percent >= $warn_level)
 {
-print "ip_conntrack WARNING - $fmt_pct% ($count_ip_conntrack) used\n";
-exit $exit_codes{'WARNING'};
+	print "ip_conntrack WARNING - $fmt_pct% ($count_ip_conntrack) used $perf_data\n";
+	exit $exit_codes{'WARNING'};
 }
 else
 {
-print "ip_conntrack OK - table usage = $fmt_pct%, count = $count_ip_conntrack\n";
-exit $exit_codes{'OK'};
+	print "ip_conntrack OK - table usage = $fmt_pct%, count = $count_ip_conntrack$perf_data\n";
+	exit $exit_codes{'OK'};
 }
 
 # Show usage
